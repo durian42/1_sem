@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+void BSort(int*, int);
+
+int main(void)
+{
+    FILE* ina;
+    FILE* inb;
+    
+    FILE* out;
+    int* A;
+    int* B;
+    int NA, NB;
+    int i;
+    int x;
+    
+    if ((ina=fopen("ina.txt","r"))==NULL) return -1;
+    if ((inb=fopen("inb.txt","r"))==NULL) return -1;
+    
+    while (fscanf(ina,"%d", &x)==1)  NA++;
+    while (fscanf(inb,"%d", &x)==1)  NB++;
+    
+    out = fopen("output.txt","w");
+    
+    printf("%d \n",NA);
+    printf("%d \n",NB);
+    
+    if ((NA>0)&& feof(ina) && (NB>0) && feof(inb)) {
+        
+        if (NA>NB) {
+            fprintf(out,"NO");
+            fclose(inb); 
+            fclose(ina); 
+            fclose(out);
+            return 0;
+        }
+        
+        fseek(ina,0,SEEK_SET);
+        A = (int*) malloc(NA*sizeof(int));
+        for (i=0;i<NA;i++)  fscanf(ina,"%d", &A[i]);
+        
+        fseek(inb,0,SEEK_SET);
+        B = (int*) malloc(NB*sizeof(int));
+        for (int j=0;j<NB;j++)  fscanf(inb,"%d", &B[j]);
+        {
+            BSort(A,NA);
+            BSort(B,NB);
+            int flag;
+            
+            if (NA==NB) {
+                for (int p=0;p<NA;p++) {
+                    if (A[p]==B[p]) flag++;
+                }
+            }
+            
+            else {
+                for (i=0;i<NA;i++) {
+                  for (int k=0;k<NB-NA;k++) {
+                      if (A[i]==B[i+k]) {
+                        printf("A= %d, B= %d \n", A[i],B[i+k]);
+                        flag++;
+                      }
+                  }
+                }
+            }
+            
+            if (flag==NA) fprintf(out,"YES");
+            else fprintf(out,"NO");
+            
+            
+            //int dlt;
+            //int nnn = (NA<NB) ? NA: NB;
+            
+            //printf("%d \n",nnn);
+            
+    
+            //printf("%d \n",qa);
+            //printf("%d \n",qb);
+            //fprintf(out,"YES");
+            
+        }
+        free(A);
+        free(B);
+    } 
+    else return -1;
+    fclose(inb); fclose(ina); fclose(out);
+return 0;
+}
+
+void BSort (int a[], int n) {
+    int i,j;
+    int t;
+    
+    for (i=0;i<n;i++) {
+        for (j=0;j<n-1-i;j++) 
+        {
+            if (a[j]>a[j+1]) {
+               t=a[j];
+               a[j]=a[j+1];
+               a[j+1]=t;
+            }
+        }
+    }
+}
